@@ -1,1 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles  */
+
+// Carbon styles needed for the project
+@use '@carbon/styles/scss/reset';
+@use '@carbon/styles/scss/type';
+//  Make type utility classes available in html
+@include type.type-classes();
+
+body {
+    background-color: var(--light-grey);
+}
+
+// Color palette
+:root {
+    --white: #ffffff;
+    --light-grey: #ebebeb;
+}

@@ -1,0 +1,16 @@
+@use '@carbon/layout';
+
+.header {
+    position: fixed;
+    top: 0;
+    z-index: 12;// TODO move to a seperate file with all elevation variations
+    width: 100%;
+    padding: layout.$spacing-05;
+    font-variant: all-small-caps;
+    background-color: var(--white);
+}
+
+.logo {
+    height: 1.2rem;
+    padding-right: layout.$spacing-04;
+}
