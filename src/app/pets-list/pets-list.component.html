@@ -1,9 +1,24 @@
 <div class="cds--grid">
   <h1 class="cds--type-heading-05">Pets</h1>
   <div class="cds--row">
-    @for (pet of pets; track pet.id) {
-      <div class="cds--col-lg-4 cds--col-padding">
-        <app-card [name]="pet.name" [status]="pet.status" [photo]="pet.photoUrls[0]"/>
+    @defer {
+      @if(pets && pets.length > 0) {
+        @for (pet of pets; track pet.id) {
+          <!-- TODO add fadeIn on load, optionally could be done on each card -->
+          <div class="cds--col-lg-4 cds--col-padding">
+            <app-card [name]="pet.name" [status]="pet.status" [photo]="pet.photoUrls[0]"/>
+          </div>
+        }
+      } @else {
+        <div class="cds--col">
+           <!-- TODO make this pretty and/or funny -->
+          No pets found 
+        </div>
+      }
+    } @placeholder(minimum 700ms) {
+      <div class="cds--col">
+        <!-- TODO replace with spinner -->
+        Loading...
       </div>
     }
   </div>
