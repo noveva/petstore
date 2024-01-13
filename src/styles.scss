@@ -5,6 +5,8 @@
 @use '@carbon/grid';
 @use '@carbon/styles/scss/type';
 @use '@carbon/styles/scss/components/dropdown';
+@use '@carbon/styles/scss/components/button';
+@use '@carbon/styles/scss/components/modal';
 @include grid.flex-grid();
 @include type.type-classes();
 

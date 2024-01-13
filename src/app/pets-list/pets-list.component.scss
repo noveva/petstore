@@ -5,3 +5,9 @@ h1 {
     padding-top: layout.$spacing-07;
     padding-bottom: layout.$spacing-05; 
 }
+
+.btn-wrapper {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}

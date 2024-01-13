@@ -3,9 +3,21 @@
   @defer {
     @if (pets && pets.length > 0) {
       <div class="cds--row">
-        <cds-dropdown class="cds--col-lg-4" [label]="'Filter by'" (selected)="handleStatusSelected($event)">
+        <cds-dropdown
+          class="cds--col-lg-4"
+          [label]="'Filter by'"
+          (selected)="handleStatusSelected($event)">
           <cds-dropdown-list [items]="filterByOptions"></cds-dropdown-list>
         </cds-dropdown>
+        <div class="btn-wrapper cds--col">
+          <button
+            [cdsButton]="'primary'"
+            (click)="addPet()">
+            Add pet
+            <svg class="cds--btn__icon" cdsIcon="add" size="16"></svg>
+          </button>
+          <app-add-pet-modal [isOpen]="isAddingPet" (closeModal)="handleCloseModal($event)"></app-add-pet-modal>
+        </div>
       </div>
       <div class="cds--row">
         @for (pet of pets; track pet.id) {

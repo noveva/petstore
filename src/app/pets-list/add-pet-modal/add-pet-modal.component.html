@@ -1,0 +1,11 @@
+<cds-modal [open]="isOpen">
+  <cds-modal-header (closeSelect)="handleClose()">
+    Please fill out the form
+  </cds-modal-header>
+  <section class="modal-body">
+    HELLO
+</section>
+  <cds-modal-footer>
+    <button [cdsButton]="'primary'" (click)="handleAdd()">Add pet</button>
+  </cds-modal-footer>
+</cds-modal>
