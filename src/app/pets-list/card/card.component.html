@@ -1,0 +1,7 @@
+<div class="card">
+  <img [src]="photo" alt="" (error)="handlePhotoFailed()" />
+  <h2 class="cds--type-heading-03">
+    {{ name }}
+  </h2>
+  <div class="status">Status: {{ status }}</div>
+</div>
