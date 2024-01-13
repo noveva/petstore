@@ -1,25 +1,37 @@
 <div class="cds--grid">
   <h1 class="cds--type-heading-05">Pets</h1>
-  <div class="cds--row">
-    @defer {
-      @if(pets && pets.length > 0) {
+  @defer {
+    @if (pets && pets.length > 0) {
+      <div class="cds--row">
+        <cds-dropdown class="cds--col-lg-4" [label]="'Filter by'" (selected)="handleStatusSelected($event)">
+          <cds-dropdown-list [items]="filterByOptions"></cds-dropdown-list>
+        </cds-dropdown>
+      </div>
+      <div class="cds--row">
         @for (pet of pets; track pet.id) {
           <!-- TODO add fadeIn on load, optionally could be done on each card -->
           <div class="cds--col-lg-4 cds--col-padding">
-            <app-card [name]="pet.name" [status]="pet.status" [photo]="pet.photoUrls[0]"/>
+            <app-card
+              [name]="pet.name"
+              [status]="pet.status"
+              [photo]="pet.photoUrls[0]" />
           </div>
         }
-      } @else {
+      </div>
+    } @else {
+      <div class="cds--row">
         <div class="cds--col">
-           <!-- TODO make this pretty and/or funny -->
-          No pets found 
+          <!-- TODO make this pretty and/or funny -->
+          No pets found
         </div>
-      }
-    } @placeholder(minimum 700ms) {
+      </div>
+    }
+  } @placeholder (minimum 700ms) {
+    <div class="cds--row">
       <div class="cds--col">
         <!-- TODO replace with spinner -->
         Loading...
       </div>
-    }
-  </div>
+    </div>
+  }
 </div>
