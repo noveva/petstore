@@ -7,7 +7,7 @@
     z-index: 12;// TODO move to a seperate file with all elevation variations
     width: 100%;
     height: app-vars.$header-height;
-    padding: layout.$spacing-05;
+    padding: layout.$spacing-05 0;
     font-variant: all-small-caps;
     background-color: var(--white);
 }

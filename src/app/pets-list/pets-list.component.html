@@ -1,0 +1,17 @@
+<div class="cds--grid">
+  <h1 class="cds--type-heading-05">Pets</h1>
+  <div class="cds--row">
+    @for (pet of pets; track pet.id) {
+      <div class="cds--col-lg-4 cds--col-padding">
+        <div class="card">
+          <h2 class="cds--type-heading-03">
+            {{ pet.name }}
+          </h2>
+          <div class="status">
+            Status: {{ pet.status }}
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

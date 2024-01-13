@@ -2,8 +2,9 @@
 
 // Carbon styles needed for the project
 @use '@carbon/styles/scss/reset';
+@use '@carbon/grid';
 @use '@carbon/styles/scss/type';
-//  Make type utility classes available in html
+@include grid.flex-grid();
 @include type.type-classes();
 
 body {
