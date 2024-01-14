@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output
+} from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -14,7 +20,7 @@ import {
   SelectModule
 } from 'carbon-components-angular';
 import { v4 as uuid } from 'uuid';
-import { tap } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { PetstoreService } from '../../services/petstore/petstore.service';
 import { PET_STATUS, Pet } from '../pets.typings';
 import { PET_STATUS_DROPDOWN_LIST_ITEMS } from '../pets.constants';
@@ -33,22 +39,40 @@ import { PET_STATUS_DROPDOWN_LIST_ITEMS } from '../pets.constants';
   templateUrl: './add-pet-modal.component.html',
   styleUrl: './add-pet-modal.component.scss'
 })
-export class AddPetModalComponent {
+export class AddPetModalComponent implements OnDestroy {
+  destroyed: Subject<boolean> = new Subject();
   petStatusSelectOptions = PET_STATUS_DROPDOWN_LIST_ITEMS;
-  petForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(140)]),
-    status: new FormControl<PET_STATUS>(this.petStatusSelectOptions[0].value),
-    photoUrls: new FormArray(
-      [this.getNewPhotoUrlFormControl()], // TODO add custom validator for URL validation with smt like `url-regex-safe`, separate case would be the data URLs
-      Validators.required
-    )
-  });
+  petForm = this.getNewPetForm();
   isSubmitting: boolean = false;
 
   @Input() isOpen: boolean = false;
   @Output() closeModal: EventEmitter<Pet | undefined> = new EventEmitter();
 
   constructor(private petStoreService: PetstoreService) {}
+
+  ngOnDestroy(): void {
+    // current state of affairs for subscriptions cleanup if you don't want to use destroyRef since it's still under dev preview
+    this.destroyed.next(true);
+    this.destroyed.complete();
+  }
+
+  private getNewPetForm(): FormGroup<{
+    name: FormControl<string | null>;
+    status: FormControl<PET_STATUS | null>;
+    photoUrls: FormArray<FormControl<string>>;
+  }> {
+    return new FormGroup({
+      name: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(140)
+      ]),
+      status: new FormControl<PET_STATUS>(this.petStatusSelectOptions[0].value),
+      photoUrls: new FormArray(
+        [this.getNewPhotoUrlFormControl()], // TODO add custom validator for URL validation with smt like `url-regex-safe`, separate case would be the data URLs
+        Validators.required
+      )
+    });
+  }
 
   private getNewPhotoUrlFormControl(): FormControl {
     return new FormControl('', [Validators.required]);
@@ -70,16 +94,17 @@ export class AddPetModalComponent {
       ...this.petForm.value,
       id: this.generateIdFromUUID(uuid())
     };
-
+    this.isSubmitting = true;
     this.petStoreService
       .addPet(formData as Pet)
-      .pipe(tap(() => (this.isSubmitting = true)))
+      .pipe(takeUntil(this.destroyed))
       .subscribe({
         next: pet => {
           this.closeModal.emit(pet);
+          this.petForm = this.getNewPetForm();
         },
         error: error => {
-          // TODO add ErrorNotificationService to display toast error messages at app root as CDS demo shows
+          // TODO add ErrorInterceptor to display toast error messages at app root as CDS demo shows
           console.error(error);
         },
         complete: () => (this.isSubmitting = false)
