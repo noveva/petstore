@@ -28,4 +28,22 @@ export class PetstoreService {
         })
       );
   }
+
+  addPet(data: Pet): Observable<Pet> {
+    // TODO handle errors in catchError
+    return this.http
+      .post<Pet>(
+        'https://petstore3.swagger.io/api/v3/pet',
+        JSON.stringify(data),
+        {
+          headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      .pipe
+      // TODO handle errors in catchError
+      ();
+  }
 }

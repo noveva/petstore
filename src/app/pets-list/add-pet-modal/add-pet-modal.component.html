@@ -10,6 +10,7 @@
         id="petName"
         cdsText
         placeholder="Name"
+        autocomplete="off"
         [formControl]="petForm.controls.name" />
     </div>
     <div class="pet-form--row">
@@ -29,13 +30,11 @@
           <input
             [id]="'photo-url-' + $index"
             placeholder="URL"
+            autocomplete="off"
             cdsText
             [formControl]="photoUrl" />
           @if ($index > 0) {
-            <cds-icon-button
-              kind="ghost"
-              size="md"
-              (click)="removeUrl($index)">
+            <cds-icon-button kind="ghost" size="md" (click)="removeUrl($index)">
               <svg class="cds--btn__icon" cdsIcon="close" size="16"></svg>
             </cds-icon-button>
           }
@@ -52,7 +51,11 @@
       [cdsButton]="'primary'"
       [disabled]="petForm.invalid"
       (click)="handleAdd()">
-      Save
+      @if (isSubmitting) {
+        Saving...
+      } @else {
+        Save
+      }
     </button>
   </cds-modal-footer>
 </cds-modal>

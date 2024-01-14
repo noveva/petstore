@@ -14,7 +14,9 @@ import {
   SelectModule
 } from 'carbon-components-angular';
 import { v4 as uuid } from 'uuid';
-import { Pet, PET_STATUS } from '../pets.typings';
+import { tap } from 'rxjs';
+import { PetstoreService } from '../../services/petstore/petstore.service';
+import { PET_STATUS, Pet } from '../pets.typings';
 import { PET_STATUS_DROPDOWN_LIST_ITEMS } from '../pets.constants';
 
 @Component({
@@ -37,24 +39,26 @@ export class AddPetModalComponent {
     name: new FormControl('', [Validators.required, Validators.maxLength(140)]),
     status: new FormControl<PET_STATUS>(this.petStatusSelectOptions[0].value),
     photoUrls: new FormArray(
-      [this.getNewPhotoUrlFormControl()], // TODO add custom validator for URL validation with smt like `url-regex-safe`
+      [this.getNewPhotoUrlFormControl()], // TODO add custom validator for URL validation with smt like `url-regex-safe`, separate case would be the data URLs
       Validators.required
     )
   });
+  isSubmitting: boolean = false;
 
   @Input() isOpen: boolean = false;
-  @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
+  @Output() closeModal: EventEmitter<Pet | undefined> = new EventEmitter();
+
+  constructor(private petStoreService: PetstoreService) {}
 
   private getNewPhotoUrlFormControl(): FormControl {
     return new FormControl('', [Validators.required]);
   }
 
-  private generateIdFromUUID(idAsString: string): number {
-    // the ways ids look in the API, it's just pets.length + 1
-    // this felt so wrong, that decided to attempt to randomize this at least a bit to reduce the chance of ids clash when adding a new pet
-    // not production code, just workign with what's there taken the assignment circumstances
+  private generateIdFromUUID(idString: string): number {
+    // this attempts to randomize the id at least a bit to reduce the chance of it clashing when adding a new pet
+    // not production code, just working with what's there taken the assignment circumstances
     const now = new Date().getTime().toString();
-    const charCodeSum = Array.from(idAsString).reduce(
+    const charCodeSum = Array.from(idString).reduce(
       (accumulator, currentValue) => accumulator + currentValue.charCodeAt(0),
       0
     );
@@ -66,12 +70,24 @@ export class AddPetModalComponent {
       ...this.petForm.value,
       id: this.generateIdFromUUID(uuid())
     };
-    console.log(this.petForm.valid, JSON.stringify(formData));
-    // this.closeModal.emit(true);
+
+    this.petStoreService
+      .addPet(formData as Pet)
+      .pipe(tap(() => (this.isSubmitting = true)))
+      .subscribe({
+        next: pet => {
+          this.closeModal.emit(pet);
+        },
+        error: error => {
+          // TODO add ErrorNotificationService to display toast error messages at app root as CDS demo shows
+          console.error(error);
+        },
+        complete: () => (this.isSubmitting = false)
+      });
   }
 
   handleClose() {
-    this.closeModal.emit(false);
+    this.closeModal.emit();
   }
 
   removeUrl(index: number) {

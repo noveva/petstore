@@ -66,8 +66,8 @@ export class PetsListComponent implements OnInit {
     this.isAddingPet = true;
   }
 
-  handleCloseModal($event: boolean) {
+  handleCloseModal(pet?: Pet) {
     this.isAddingPet = false;
-    console.log('CLOSED, should update list? ', $event);
+    console.log('CLOSED, should update list? ', JSON.stringify(pet));
   }
 }
