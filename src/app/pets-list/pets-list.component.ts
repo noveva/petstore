@@ -30,24 +30,33 @@ export class PetsListComponent implements OnInit {
   pets?: Pet[];
   isAddingPet: boolean = false;
   defaultFilterStatus: PET_STATUS = 'available';
-  filterByOptions: PetDropdownListItem[] = PET_STATUS_DROPDOWN_LIST_ITEMS;
+  filterByOptions: PetDropdownListItem[] = PET_STATUS_DROPDOWN_LIST_ITEMS.map(
+    listItem => {
+      if (listItem.value === this.defaultFilterStatus) {
+        listItem.selected = true;
+      }
+      return listItem;
+    }
+  );
+  private petsFilteredBy?: PET_STATUS;
 
   constructor(
     private petStoreService: PetstoreService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef // under dev preview, perfect for a pet project
   ) {}
 
   ngOnInit(): void {
-    this.getPets();
+    this.getPets(this.defaultFilterStatus);
   }
 
-  private getPets(status: PET_STATUS = this.defaultFilterStatus) {
+  private getPets(status: PET_STATUS) {
     this.petStoreService
       .getPets(status)
       .pipe(takeUntilDestroyed(this.destroyRef)) // operator in dev preview, too tempting to not to give it a go in a pet project
       .subscribe({
         next: pets => {
           this.pets = pets;
+          this.petsFilteredBy = status;
         },
         error: () => {
           this.pets = [];
@@ -68,6 +77,13 @@ export class PetsListComponent implements OnInit {
 
   handleCloseModal(pet?: Pet) {
     this.isAddingPet = false;
-    console.log('CLOSED, should update list? ', JSON.stringify(pet));
+    if (pet && pet.status === this.petsFilteredBy) {
+      // the requirement is formulated as "Refresh the overview after adding a new pet."
+      // if "refresh" === "show the pet you just added": the two lines below are fine, spares you an API call
+      this.pets = this.pets || [];
+      this.pets.push(pet);
+      // if "refresh" === "fetch the list with the same status", the line below should be uncommented instead of the two lines above
+      // this.getPets(this.petsFilteredBy);
+    }
   }
 }
