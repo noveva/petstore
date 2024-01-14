@@ -49,7 +49,7 @@
   <cds-modal-footer>
     <button
       [cdsButton]="'primary'"
-      [disabled]="petForm.invalid"
+      [disabled]="petForm.invalid || isSubmitting"
       (click)="handleAdd()">
       @if (isSubmitting) {
         Saving...
