@@ -1,27 +1,23 @@
-# ValtimoPetStore
+# Overview
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.10.
+This project show a list of pets `[`:dog::snail::cat::hamster::rabbit::fish::rat::rooster::mouse::turtle::ant:`]`.
 
-## Development server
+You can filter pets by status, use the filter above the list. 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+You can add a pet to the list, click on the "Add pet" button above the list - a modal will pop up.
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Running the project
 
-## Build
+Run `ng serve` and navigate to `http://localhost:4200/`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+## TODO
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Nothing is perfect. Here's a list of things that would be great to do, but were not done:
 
-## Running end-to-end tests
+* Unit tests (the auto-generated ones are broken)
+* Slider to show all pet images in the list (or another alternative way to show all pet info, e.g. a modal or a pet page)
+* Pagination of the pets list (API does not support it from what I reckoned, but still would be nice)
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+If you search for `TODO` in the project, you'll find a bunch of smaller improvements that as well were left behind.
