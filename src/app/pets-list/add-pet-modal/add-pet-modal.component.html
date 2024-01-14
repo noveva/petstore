@@ -2,10 +2,28 @@
   <cds-modal-header (closeSelect)="handleClose()">
     Please fill out the form
   </cds-modal-header>
-  <section class="modal-body">
-    HELLO
-</section>
+  <section class="cds--modal-content">
+    <div class="pet-form--row">
+      <cds-text-label labelInputID="petName"> Pet name&ast; </cds-text-label>
+      <!--- TODO: add an invalid text message, smt like "Pet name too long, please make the pet name shorter" -->
+      <input id="petName" cdsText placeholder="Name" [formControl]="petForm.controls.name" />
+    </div>
+    <cds-select
+      class="pet-form--row"
+      label="Pet status"
+      [value]="petForm.controls.status.value"
+      [formControl]="petForm.controls.status">
+      @for (option of petStatusSelectOptions; track option.value) {
+        <option [value]="option.value">{{ option.content }}</option>
+      }
+    </cds-select>
+  </section>
   <cds-modal-footer>
-    <button [cdsButton]="'primary'" (click)="handleAdd()">Add pet</button>
+    <button
+      [cdsButton]="'primary'"
+      [disabled]="petForm.invalid"
+      (click)="handleAdd()">
+      Save
+    </button>
   </cds-modal-footer>
 </cds-modal>

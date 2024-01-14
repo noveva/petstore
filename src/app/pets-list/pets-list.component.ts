@@ -4,17 +4,13 @@ import {
   ButtonModule,
   DropdownModule,
   IconModule,
-  ListItem,
   ModalModule
 } from 'carbon-components-angular';
 import { PetCardComponent } from './card/card.component';
-import { PET_STATUS, Pet } from './pets.typings';
+import { PET_STATUS, Pet, PetDropdownListItem } from './pets.typings';
 import { PetstoreService } from '../services/petstore/petstore.service';
 import { AddPetModalComponent } from './add-pet-modal/add-pet-modal.component';
-
-interface PetDropdownListItem extends ListItem {
-  value: PET_STATUS;
-}
+import { PET_STATUS_DROPDOWN_LIST_ITEMS } from './pets.constants';
 
 @Component({
   selector: 'app-pets-list',
@@ -34,11 +30,7 @@ export class PetsListComponent implements OnInit {
   pets?: Pet[];
   isAddingPet: boolean = false;
   defaultFilterStatus: PET_STATUS = 'available';
-  filterByOptions: PetDropdownListItem[] = [
-    { content: 'Pending', selected: false, value: 'pending' },
-    { content: 'Available', selected: true, value: 'available' },
-    { content: 'Sold', selected: false, value: 'sold' }
-  ];
+  filterByOptions: PetDropdownListItem[] = PET_STATUS_DROPDOWN_LIST_ITEMS;
 
   constructor(
     private petStoreService: PetstoreService,
