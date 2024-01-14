@@ -6,17 +6,46 @@
     <div class="pet-form--row">
       <cds-text-label labelInputID="petName"> Pet name&ast; </cds-text-label>
       <!--- TODO: add an invalid text message, smt like "Pet name too long, please make the pet name shorter" -->
-      <input id="petName" cdsText placeholder="Name" [formControl]="petForm.controls.name" />
+      <input
+        id="petName"
+        cdsText
+        placeholder="Name"
+        [formControl]="petForm.controls.name" />
     </div>
-    <cds-select
-      class="pet-form--row"
-      label="Pet status"
-      [value]="petForm.controls.status.value"
-      [formControl]="petForm.controls.status">
-      @for (option of petStatusSelectOptions; track option.value) {
-        <option [value]="option.value">{{ option.content }}</option>
+    <div class="pet-form--row">
+      <cds-select
+        label="Pet status"
+        [value]="petForm.controls.status.value"
+        [formControl]="petForm.controls.status">
+        @for (option of petStatusSelectOptions; track option.value) {
+          <option [value]="option.value">{{ option.content }}</option>
+        }
+      </cds-select>
+    </div>
+    <fieldset class="pet-form--row">
+      <legend class="cds--label">Pet photos&ast;</legend>
+      @for (photoUrl of petForm.controls.photoUrls.controls; track $index) {
+        <div class="pet-form--control-with-reset pet-form--row">
+          <input
+            [id]="'photo-url-' + $index"
+            placeholder="URL"
+            cdsText
+            [formControl]="photoUrl" />
+          @if ($index > 0) {
+            <cds-icon-button
+              kind="ghost"
+              size="md"
+              (click)="removeUrl($index)">
+              <svg class="cds--btn__icon" cdsIcon="close" size="16"></svg>
+            </cds-icon-button>
+          }
+        </div>
       }
-    </cds-select>
+      <button cdsButton="tertiary" size="sm" (click)="addUrl()">
+        Add URL
+        <svg class="cds--btn__icon" cdsIcon="add" size="16"></svg>
+      </button>
+    </fieldset>
   </section>
   <cds-modal-footer>
     <button

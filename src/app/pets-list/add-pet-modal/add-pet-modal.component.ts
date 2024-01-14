@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
+  FormArray,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -7,6 +8,7 @@ import {
 } from '@angular/forms';
 import {
   ButtonModule,
+  IconModule,
   InputModule,
   ModalModule,
   SelectModule
@@ -21,6 +23,7 @@ import { PET_STATUS_DROPDOWN_LIST_ITEMS } from '../pets.constants';
   imports: [
     ModalModule,
     ButtonModule,
+    IconModule,
     InputModule,
     SelectModule,
     ReactiveFormsModule
@@ -32,12 +35,19 @@ export class AddPetModalComponent {
   petStatusSelectOptions = PET_STATUS_DROPDOWN_LIST_ITEMS;
   petForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.maxLength(140)]),
-    status: new FormControl<PET_STATUS>(this.petStatusSelectOptions[0].value)
-    // photoUrls: new FormControl<string[]>([], Validators.required)
+    status: new FormControl<PET_STATUS>(this.petStatusSelectOptions[0].value),
+    photoUrls: new FormArray(
+      [this.getNewPhotoUrlFormControl()], // TODO add custom validator for URL validation with smt like `url-regex-safe`
+      Validators.required
+    )
   });
 
   @Input() isOpen: boolean = false;
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
+
+  private getNewPhotoUrlFormControl(): FormControl {
+    return new FormControl('', [Validators.required]);
+  }
 
   private generateIdFromUUID(idAsString: string): number {
     // the ways ids look in the API, it's just pets.length + 1
@@ -52,15 +62,23 @@ export class AddPetModalComponent {
   }
 
   handleAdd() {
-    const id = this.generateIdFromUUID(uuid());
-    console.log(id, this.petForm.valid, JSON.stringify(this.petForm.value));
-    // const formData = {
-    //   id: new DataView(uuidParse(uuid())).getUint32(0)
-    // };
+    const formData = {
+      ...this.petForm.value,
+      id: this.generateIdFromUUID(uuid())
+    };
+    console.log(this.petForm.valid, JSON.stringify(formData));
     // this.closeModal.emit(true);
   }
 
   handleClose() {
     this.closeModal.emit(false);
+  }
+
+  removeUrl(index: number) {
+    this.petForm.controls.photoUrls.removeAt(index);
+  }
+
+  addUrl() {
+    this.petForm.controls.photoUrls.push(this.getNewPhotoUrlFormControl());
   }
 }
