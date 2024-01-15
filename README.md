@@ -9,7 +9,9 @@ You can add a pet to the list, click on the "Add pet" button above the list - a 
 
 ## Running the project
 
-Run `ng serve` and navigate to `http://localhost:4200/`.
+Install all dependencies by running `npm ci`.
+
+Then run `ng serve` and navigate to `http://localhost:4200/` to see the project.
 
 
 ## TODO
